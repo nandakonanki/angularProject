@@ -1,0 +1,154 @@
+<div class="page-container">
+  <app-header></app-header>
+  
+  <app-alert
+    [show]="showAlert"
+    [message]="alertMessage"
+    [type]="alertType"
+    (closed)="onAlertClosed()">
+  </app-alert>
+
+  <app-confirmation-modal
+    [show]="showConfirmModal"
+    [title]="confirmModalTitle"
+    [message]="confirmModalMessage"
+    [confirmText]="'Confirm'"
+    (confirmed)="onConfirmModalConfirmed()"
+    (cancelled)="onConfirmModalCancelled()">
+  </app-confirmation-modal>
+
+  <div class="transfers-container">
+    <div class="header">
+      <div class="header-left">
+        <button class="back-btn" (click)="navigateBack()">
+          <i class="material-icons">arrow_back</i>
+          Back to Dashboard
+        </button>
+        <h1>Transfers</h1>
+      </div>
+      <button class="add-payee-btn" (click)="showAddPayeeForm = true" *ngIf="!showAddPayeeForm">
+        <i class="material-icons">person_add</i>
+        Add New Payee
+      </button>
+    </div>
+
+    <!-- Transfer History -->
+    <div class="transfer-history">
+      <h2>Transfer History</h2>
+      <ng-container *ngIf="transfers$ | async as transfers">
+        <div class="transfers-list" *ngIf="transfers.length > 0; else noTransfers">
+          <div class="transfer-item" *ngFor="let transfer of transfers">
+            <div class="transfer-details">
+              <div class="transfer-amount">${{transfer.amount}}</div>
+              <div class="transfer-info">
+                <div class="transfer-description">{{transfer.description}}</div>
+                <div class="transfer-date">{{transfer.date | date:'medium'}}</div>
+              </div>
+            </div>
+            <div class="transfer-status" [ngClass]="transfer.status">
+              {{transfer.status | titlecase}}
+            </div>
+          </div>
+        </div>
+        <ng-template #noTransfers>
+          <div class="no-transfers-message">
+            <p>No transfer history available.</p>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <!-- Transfer Form -->
+    <ng-container *ngIf="payees$ | async as payees">
+      <div class="transfer-form" *ngIf="!showAddPayeeForm && payees.length > 0">
+        <h2>Create ACH Transfer</h2>
+        <form [formGroup]="transferForm" (ngSubmit)="onCreateTransfer()">
+          <div class="form-group">
+            <label for="fromAccount">From Account</label>
+            <select id="fromAccount" formControlName="fromAccountId">
+              <option value="">Select account</option>
+              <option *ngFor="let account of accounts$ | async" [value]="account.id">
+                {{account.type | titlecase}} - ${{account.balance}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="toPayee">To Payee</label>
+            <select id="toPayee" formControlName="toPayeeId">
+              <option value="">Select payee</option>
+              <option *ngFor="let payee of payees" [value]="payee.id">
+                {{payee.name}} - {{payee.bankName}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" formControlName="amount" placeholder="Enter amount">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" formControlName="description" placeholder="Enter description">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="submit-btn" [disabled]="!transferForm.valid">Send Transfer</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- No Payees Message -->
+      <div class="no-payees-message" *ngIf="!showAddPayeeForm && payees.length === 0">
+        <div class="message-content">
+          <i class="material-icons">info</i>
+          <h2>No Payees Found</h2>
+          <p>You need to add a payee before you can make a transfer.</p>
+          <button class="add-payee-btn" (click)="showAddPayeeForm = true">
+            <i class="material-icons">person_add</i>
+            Add New Payee
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Add Payee Form -->
+    <div class="add-payee-form" *ngIf="showAddPayeeForm">
+      <h2>Add New Payee</h2>
+      <form [formGroup]="payeeForm" (ngSubmit)="onAddPayee()">
+        <div class="form-group">
+          <label for="name">Payee Name</label>
+          <input type="text" id="name" formControlName="name" placeholder="Enter payee name">
+        </div>
+        <div class="form-group">
+          <label for="bankName">Bank Name</label>
+          <input type="text" id="bankName" formControlName="bankName" placeholder="Enter bank name">
+        </div>
+        <div class="form-group">
+          <label for="accountType">Account Type</label>
+          <select id="accountType" formControlName="accountType">
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="accountNumber">Account Number</label>
+          <input type="text" id="accountNumber" formControlName="accountNumber" placeholder="Enter account number">
+        </div>
+        <div class="form-group">
+          <label for="routingNumber">Routing Number</label>
+          <input type="text" id="routingNumber" formControlName="routingNumber" placeholder="Enter routing number">
+        </div>
+        <div class="form-group">
+          <label for="email">Email (Optional)</label>
+          <input type="email" id="email" formControlName="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone (Optional)</label>
+          <input type="tel" id="phone" formControlName="phone" placeholder="Enter phone number">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="showAddPayeeForm = false">Cancel</button>
+          <button type="submit" class="submit-btn" [disabled]="!payeeForm.valid">Add Payee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

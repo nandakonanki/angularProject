@@ -1,0 +1,425 @@
+<div class="create-account-container">
+  <app-header></app-header>
+  
+  <div class="content">
+    <div class="page-header">
+      <button type="button" class="back-to-dashboard" (click)="goToDashboard()">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </button>
+      <h1>Create New Account</h1>
+    </div>
+
+    <div class="stepper">
+      <div *ngFor="let step of steps; let i = index" 
+           class="step" 
+           [class.active]="step.active" 
+           [class.completed]="step.completed">
+        <div class="step-number">{{ i + 1 }}</div>
+        <div class="step-title">{{ step.title }}</div>
+        <div class="step-subtitle">{{ step.subtitle }}</div>
+      </div>
+    </div>
+
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="account-form">
+      <!-- Personal Information -->
+      <div class="form-section" [class.active]="currentStep === 0" formGroupName="individualDetails">
+        <h2>Personal Information</h2>
+        <div formGroupName="legalName">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="required">First Name</label>
+              <input type="text" formControlName="firstName" placeholder="Enter your first name">
+            </div>
+            <div class="form-group">
+              <label>Middle Name</label>
+              <input type="text" formControlName="middleName" placeholder="Enter your middle name">
+            </div>
+            <div class="form-group">
+              <label class="required">Last Name</label>
+              <input type="text" formControlName="lastName" placeholder="Enter your last name">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="required">Date of Birth</label>
+            <input type="date" formControlName="dob">
+          </div>
+          <div class="form-group">
+            <label class="required">Countries of Citizenship</label>
+            <select formControlName="countriesOfCitizenship" multiple>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="preferredName">Preferred Name</label>
+          <input id="preferredName" type="text" formControlName="preferredName" placeholder="How would you like to be called?">
+        </div>
+      </div>
+
+      <!-- Contact Details -->
+      <div class="form-section" [class.active]="currentStep === 1">
+        <h2>Contact Details</h2>
+        <div formGroupName="individualDetails">
+          <div formGroupName="contactData">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="required">Email Address</label>
+                <input type="email" formControlName="emailAddress1" placeholder="Enter your email">
+              </div>
+              <div class="form-group">
+                <label class="required">Mobile Number</label>
+                <input type="tel" formControlName="mobileNumber" placeholder="Enter your mobile number">
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" formControlName="phoneNumber" placeholder="Enter your phone number">
+              </div>
+            </div>
+          </div>
+          <div formGroupName="primaryAddress">
+            <h3>Address Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Address Line 1</label>
+                <input type="text" formControlName="addressLine1" placeholder="Enter address line 1">
+              </div>
+              <div class="form-group">
+                <label>Address Line 2</label>
+                <input type="text" formControlName="addressLine2" placeholder="Enter address line 2">
+              </div>
+              <div class="form-group">
+                <label>Address Line 3</label>
+                <input type="text" formControlName="addressLine3" placeholder="Enter address line 3">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Building Number</label>
+                <input type="text" formControlName="buildingNumber" placeholder="Enter building number">
+              </div>
+              <div class="form-group">
+                <label>Building Name</label>
+                <input type="text" formControlName="buildingName" placeholder="Enter building name">
+              </div>
+              <div class="form-group">
+                <label>Floor</label>
+                <input type="text" formControlName="floor" placeholder="Enter floor">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Room</label>
+                <input type="text" formControlName="room" placeholder="Enter room">
+              </div>
+              <div class="form-group">
+                <label class="required">Street Name</label>
+                <input type="text" formControlName="streetName" placeholder="Enter street name">
+              </div>
+              <div class="form-group">
+                <label>District Name</label>
+                <input type="text" formControlName="districtName" placeholder="Enter district name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="required">Town/City</label>
+                <input type="text" formControlName="townName" placeholder="Enter town/city">
+              </div>
+              <div class="form-group">
+                <label>Town Location</label>
+                <input type="text" formControlName="townLocationName" placeholder="Enter town location">
+              </div>
+              <div class="form-group">
+                <label class="required">State</label>
+                <input type="text" formControlName="countrySubDivision" placeholder="Enter state">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="required">Postal Code</label>
+                <input type="text" formControlName="postCode" placeholder="Enter postal code">
+              </div>
+              <div class="form-group">
+                <label>Country Code</label>
+                <input type="text" formControlName="countryCode" placeholder="Enter country code">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identity Verification -->
+      <div class="form-section" [class.active]="currentStep === 2">
+        <h2>Identity Verification</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="required">Tax ID (SSN)</label>
+            <input type="text" formControlName="taxId" placeholder="XXX-XX-XXXX">
+          </div>
+          <div class="form-group">
+            <label>Tax ID Type</label>
+            <select formControlName="taxIdType">
+              <option value="S">SSN</option>
+              <option value="E">EIN</option>
+              <option value="I">ITIN</option>
+            </select>
+          </div>
+        </div>
+        <div formGroupName="kycDocumentDetails">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="required">Government Issuing Authority</label>
+              <input type="text" formControlName="govtIssueAuth" placeholder="Enter issuing authority">
+            </div>
+            <div class="form-group">
+              <label class="required">Government ID Number</label>
+              <input type="text" formControlName="govtIssueIdNum" placeholder="Enter ID number">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="required">Source of Method</label>
+              <select formControlName="sourceOfMethodUtilized">
+                <option value="DL">Driver's License (DL)</option>
+                <option value="NIC">National ID Card (NIC)</option>
+                <option value="AFID">Armed Forces ID (AFID)</option>
+                <option value="AID">Alien ID (AID)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Other Source Description</label>
+              <input type="text" formControlName="otherSourceDesc" placeholder="Enter other source description">
+            </div>
+          </div>
+          <input type="hidden" formControlName="isDocumentary" [value]="false">
+        </div>
+      </div>
+
+      <!-- Account Type -->
+      <div class="form-section" [class.active]="currentStep === 3" formGroupName="virtualAccountDetails">
+        <h2>Account Type</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="required">Account Name</label>
+            <input type="text" formControlName="virtualAccountName" placeholder="Enter account name">
+          </div>
+          <div class="form-group">
+            <label>Account Type</label>
+            <select formControlName="accountType">
+              <option value="SVG">Savings</option>
+              <option value="CHK">Checking</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Minimum Balance</label>
+            <input type="number" formControlName="minimumBalance" placeholder="Enter minimum balance">
+          </div>
+          <div class="form-group">
+            <label>Interest Rate (%)</label>
+            <input type="number" formControlName="interestRate" placeholder="Enter interest rate">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Allowed Payment Methods</label>
+            <select formControlName="allowedPaymentMethods" multiple>
+              <option value="Wire">Wire Transfer</option>
+              <option value="Check">Check</option>
+              <option value="DebitCard">Debit Card</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overdraft Protection</label>
+            <select formControlName="overDraftAllowed">
+              <option [ngValue]="true">Yes</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="accountForm.get('virtualAccountDetails.overDraftAllowed')?.value">
+            <label>Overdraft Limit</label>
+            <input type="number" formControlName="overDraftLimit" placeholder="Enter overdraft limit">
+          </div>
+        </div>
+      </div>
+
+      <!-- Review & Submit -->
+      <div class="form-section" [class.active]="currentStep === 4">
+        <h2>Review & Submit</h2>
+        <p class="review-intro">Please review your information before submitting.</p>
+
+        <div class="review-section">
+          <div class="section-header">
+            <h3>Personal Information</h3>
+            <button type="button" class="edit-button" (click)="goToStep(0)">
+              <i class="fas fa-edit"></i>
+              Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <label>Full Name</label>
+              <p>{{accountForm.get('individualDetails.legalName.firstName')?.value}} 
+                 {{accountForm.get('individualDetails.legalName.middleName')?.value}} 
+                 {{accountForm.get('individualDetails.legalName.lastName')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Date of Birth</label>
+              <p>{{accountForm.get('individualDetails.dob')?.value | date}}</p>
+            </div>
+            <div class="review-item">
+              <label>Countries of Citizenship</label>
+              <p>{{accountForm.get('individualDetails.countriesOfCitizenship')?.value?.join(', ')}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="section-header">
+            <h3>Contact Details</h3>
+            <button type="button" class="edit-button" (click)="goToStep(1)">
+              <i class="fas fa-edit"></i>
+              Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <label>Email Address</label>
+              <p>{{accountForm.get('individualDetails.contactData.emailAddress1')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Mobile Number</label>
+              <p>{{accountForm.get('individualDetails.contactData.mobileNumber')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Phone Number</label>
+              <p>{{accountForm.get('individualDetails.contactData.phoneNumber')?.value || 'Not provided'}}</p>
+            </div>
+          </div>
+
+          <div class="review-grid">
+            <div class="review-item">
+              <label>Address</label>
+              <p>
+                {{accountForm.get('individualDetails.primaryAddress.addressLine1')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.addressLine2')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.addressLine3')?.value}}
+              </p>
+              <p>
+                {{accountForm.get('individualDetails.primaryAddress.buildingNumber')?.value}} 
+                {{accountForm.get('individualDetails.primaryAddress.buildingName')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.floor')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.room')?.value}}
+              </p>
+              <p>
+                {{accountForm.get('individualDetails.primaryAddress.streetName')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.districtName')?.value}}
+              </p>
+              <p>
+                {{accountForm.get('individualDetails.primaryAddress.townName')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.townLocationName')?.value}}, 
+                {{accountForm.get('individualDetails.primaryAddress.countrySubDivision')?.value}} 
+                {{accountForm.get('individualDetails.primaryAddress.postCode')?.value}}
+                {{accountForm.get('individualDetails.primaryAddress.countryCode')?.value}}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="section-header">
+            <h3>Identity Verification</h3>
+            <button type="button" class="edit-button" (click)="goToStep(2)">
+              <i class="fas fa-edit"></i>
+              Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <label>Tax ID</label>
+              <p>{{accountForm.get('taxId')?.value}} ({{accountForm.get('taxIdType')?.value}})</p>
+            </div>
+            <div class="review-item">
+              <label>Government ID</label>
+              <p>{{accountForm.get('kycDocumentDetails.govtIssueIdNum')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Issuing Authority</label>
+              <p>{{accountForm.get('kycDocumentDetails.govtIssueAuth')?.value}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="section-header">
+            <h3>Account Details</h3>
+            <button type="button" class="edit-button" (click)="goToStep(3)">
+              <i class="fas fa-edit"></i>
+              Edit
+            </button>
+          </div>
+          <div class="review-grid">
+            <div class="review-item">
+              <label>Account Name</label>
+              <p>{{accountForm.get('virtualAccountDetails.virtualAccountName')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Account Type</label>
+              <p>{{accountForm.get('virtualAccountDetails.accountType')?.value === 'SVG' ? 'Savings' : 'Checking'}}</p>
+            </div>
+            <div class="review-item">
+              <label>Minimum Balance</label>
+              <p>${{accountForm.get('virtualAccountDetails.minimumBalance')?.value}}</p>
+            </div>
+            <div class="review-item">
+              <label>Interest Rate</label>
+              <p>{{accountForm.get('virtualAccountDetails.interestRate')?.value}}%</p>
+            </div>
+            <div class="review-item">
+              <label>Payment Methods</label>
+              <p>{{accountForm.get('virtualAccountDetails.allowedPaymentMethods')?.value?.join(', ')}}</p>
+            </div>
+            <div class="review-item">
+              <label>Overdraft Protection</label>
+              <p>{{accountForm.get('virtualAccountDetails.overDraftAllowed')?.value ? 'Yes' : 'No'}}</p>
+            </div>
+            <div class="review-item" *ngIf="accountForm.get('virtualAccountDetails.overDraftAllowed')?.value">
+              <label>Overdraft Limit</label>
+              <p>${{accountForm.get('virtualAccountDetails.overDraftLimit')?.value}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" 
+                class="btn-back" 
+                (click)="previousStep()" 
+                [disabled]="currentStep === 0">
+          Back
+        </button>
+        <button *ngIf="currentStep < steps.length - 1" 
+                type="button" 
+                class="btn-next" 
+                (click)="nextStep()" 
+                [disabled]="!isStepValid()">
+          Next
+        </button>
+        <button *ngIf="currentStep === steps.length - 1" 
+                type="submit" 
+                class="btn-submit" 
+                [disabled]="!accountForm.valid || isLoading">
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

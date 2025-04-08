@@ -1,0 +1,51 @@
+<div class="page-container">
+  <app-header></app-header>
+  
+  <div class="transactions-container">
+    <div class="header">
+      <div class="header-left">
+        <button class="back-btn" (click)="navigateBack()">
+          <i class="material-icons">arrow_back</i>
+          Back to Dashboard
+        </button>
+        <h1>Account Transactions</h1>
+      </div>
+    </div>
+
+    <div class="account-info" *ngIf="account$ | async as account">
+      <div class="account-header">
+        <div class="account-type">{{ account.type | titlecase }} Account</div>
+        <div class="account-number">Account Number: {{ account.accountNumber }}</div>
+      </div>
+      <div class="balance-info">
+        <div class="current-balance">Current Balance</div>
+        <div class="balance-amount">${{ account.balance.toFixed(2) }}</div>
+      </div>
+    </div>
+
+    <div class="transactions-list" *ngIf="transactions$ | async as transactions">
+      <h2>Transaction History</h2>
+      <div class="transaction-items" *ngIf="transactions.length > 0; else noTransactions">
+        <div class="transaction-item" *ngFor="let transaction of transactions">
+          <div class="transaction-details">
+            <div class="transaction-amount" [ngClass]="{'credit': transaction.type === 'credit', 'debit': transaction.type === 'debit'}">
+              {{ transaction.type === 'debit' ? '-' : '+' }}${{ transaction.amount.toFixed(2) }}
+            </div>
+            <div class="transaction-info">
+              <div class="transaction-description">{{ transaction.description }}</div>
+              <div class="transaction-date">{{ transaction.date | date:'medium' }}</div>
+            </div>
+          </div>
+          <div class="transaction-status" [ngClass]="transaction.status.toLowerCase()">
+            {{ transaction.status }}
+          </div>
+        </div>
+      </div>
+      <ng-template #noTransactions>
+        <div class="no-transactions">
+          <p>No transactions found for this account.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div> 
