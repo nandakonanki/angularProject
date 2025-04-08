@@ -14,7 +14,7 @@
 
     <div class="account-info" *ngIf="account$ | async as account">
       <div class="account-header">
-        <div class="account-type">{{ account.type | titlecase }} Account</div>
+        <div class="account-type">{{ account.accountType === 'CHK' ? 'Checking' : 'Savings' }} Account</div>
         <div class="account-number">Account Number: {{ account.accountNumber }}</div>
       </div>
       <div class="balance-info">

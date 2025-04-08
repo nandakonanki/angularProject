@@ -80,7 +80,7 @@ export class CreateAccountComponent implements OnInit {
   private initializeForm(): void {
     this.accountForm = this.fb.group({
       individualDetails: this.fb.group({
-        alternativeId: [''],
+        alternativeId: ['154821'],
         contactData: this.fb.group({
           emailAddress1: ['', [Validators.required, Validators.email]],
           mobileNumber: ['', Validators.required],
@@ -93,7 +93,7 @@ export class CreateAccountComponent implements OnInit {
           lastName: ['', Validators.required],
           middleName: ['']
         }),
-        parentClientId: [''],
+        parentClientId: ['1000195150'],
         preferredName: [''],
         primaryAddress: this.fb.group({
           addressLine1: [''],
