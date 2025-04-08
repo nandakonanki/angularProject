@@ -1,0 +1,79 @@
+<div class="account-status-container">
+  <app-header></app-header>
+
+  <div class="content">
+    <div class="page-header" @fadeIn>
+      <button class="back-to-dashboard" routerLink="/dashboard">
+        <i class="material-icons">arrow_back</i>
+        Back to Dashboard
+      </button>
+      <h1>Account Status</h1>
+    </div>
+
+    <div @staggerList>
+      <div class="status-card" *ngFor="let account of accountStatusInfo" @fadeIn [@pulseAnimation]="animationState" (click)="triggerPulse()">
+        <div class="status-header">
+          <div class="status-badge" 
+               [@statusBadge]="account.kycStatus.toLowerCase()" 
+               [ngClass]="{'verified': account.kycStatus === 'Verified', 'pending': account.kycStatus === 'Pending', 'rejected': account.kycStatus === 'Rejected'}">
+            <i class="material-icons">{{ account.kycStatus === 'Verified' ? 'check_circle' : (account.kycStatus === 'Pending' ? 'hourglass_empty' : 'error') }}</i>
+            {{ account.kycStatus }}
+          </div>
+          <div class="account-number">Account #: <span>{{ account.accountNumber }}</span></div>
+        </div>
+
+        <div class="status-details">
+          <div class="detail-row">
+            <div class="detail-item">
+              <label><i class="material-icons">verified_user</i> KYC Status</label>
+              <div class="value" [ngClass]="{
+                'status-verified': account.kycStatus === 'Verified',
+                'status-pending': account.kycStatus === 'Pending',
+                'status-rejected': account.kycStatus === 'Rejected'
+              }">{{ account.kycStatus }}</div>
+            </div>
+            <div class="detail-item">
+              <label><i class="material-icons">security</i> Account Status</label>
+              <div class="value" [ngClass]="{
+                'status-active': account.accountStatus === 'Active',
+                'status-inactive': account.accountStatus === 'Inactive',
+                'status-suspended': account.accountStatus === 'Suspended'
+              }">{{ account.accountStatus }}</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-item">
+              <label><i class="material-icons">assignment</i> Onboard Request ID</label>
+              <div class="value">{{ account.onboardRequestId }}</div>
+            </div>
+            <div class="detail-item">
+              <label><i class="material-icons">fingerprint</i> Alternative ID</label>
+              <div class="value">{{ account.alternativeId }}</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-item">
+              <label><i class="material-icons">supervisor_account</i> Parent Client ID</label>
+              <div class="value">{{ account.parentClientId }}</div>
+            </div>
+            <div class="detail-item">
+              <label><i class="material-icons">update</i> Last Updated</label>
+              <div class="value">{{ today | date:'medium' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-accounts" *ngIf="accountStatusInfo.length === 0" @fadeIn>
+      <div class="empty-state">
+        <i class="material-icons">info</i>
+        <h3>No Accounts Found</h3>
+        <p>You don't have any accounts yet. Create an account to view status information.</p>
+        <button class="create-account-btn" routerLink="/create-account">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div> 

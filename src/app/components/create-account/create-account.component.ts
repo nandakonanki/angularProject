@@ -5,6 +5,8 @@ import { AccountCreationPayload } from '../../interfaces/account-creation.interf
 import { HeaderComponent } from '../header/header.component';
 import { Router } from '@angular/router';
 import { AccountService } from '../../services/account.service';
+import { ApiService } from '../../services/api.service';
+import { finalize } from 'rxjs/operators';
 
 interface Step {
   title: string;
@@ -30,6 +32,7 @@ export class CreateAccountComponent implements OnInit {
   isLoading = false;
   currentStep = 0;
   private accountService = inject(AccountService);
+  private apiService = inject(ApiService);
 
   steps: Step[] = [
     { 
@@ -243,26 +246,23 @@ export class CreateAccountComponent implements OnInit {
           virtualAccountDetails: formValue.virtualAccountDetails
         });
         
-        // Create account data object with proper type assertion
-        const accountData = {
-          accountType: formValue.virtualAccountDetails.accountType === 'SVG' ? 'SAV' : 'CHK',
-          virtualAccountName: formValue.virtualAccountDetails.virtualAccountName || `${formValue.individualDetails.legalName.firstName}'s ${formValue.virtualAccountDetails.accountType === 'SVG' ? 'Savings' : 'Checking'} Account`
-        } as const;
-
-        console.log('Creating account with data:', accountData);
-        
-        // Call the account creation method
-        this.accountService.createAccount(formValue).subscribe({
-          next: () => {
-            console.log('Account created successfully');
-            this.isLoading = false;
-            this.router.navigate(['/dashboard']);
-          },
-          error: (error) => {
-            console.error('Error creating account:', error);
-            this.isLoading = false;
-          }
-        });
+        // First call the API
+        this.apiService.createUser(formValue)
+          .pipe(
+            finalize(() => {
+              // Regardless of API success/failure, create the account in the local service
+              this.createLocalAccount(formValue);
+            })
+          )
+          .subscribe({
+            next: (response) => {
+              console.log('API Response:', response);
+            },
+            error: (error) => {
+              console.error('API Error:', error);
+              // Continue with local account creation even if API fails
+            }
+          });
       } catch (error) {
         console.error('Error in onSubmit:', error);
         this.isLoading = false;
@@ -274,6 +274,29 @@ export class CreateAccountComponent implements OnInit {
       // Mark all form controls as touched to show validation errors
       this.markFormGroupTouched(this.accountForm);
     }
+  }
+
+  private createLocalAccount(formValue: any): void {
+    // Create account data object with proper type assertion
+    const accountData = {
+      accountType: formValue.virtualAccountDetails.accountType === 'SVG' ? 'SAV' : 'CHK',
+      virtualAccountName: formValue.virtualAccountDetails.virtualAccountName || `${formValue.individualDetails.legalName.firstName}'s ${formValue.virtualAccountDetails.accountType === 'SVG' ? 'Savings' : 'Checking'} Account`
+    } as const;
+
+    console.log('Creating local account with data:', accountData);
+    
+    // Call the account creation method
+    this.accountService.createAccount(formValue).subscribe({
+      next: () => {
+        console.log('Account created successfully');
+        this.isLoading = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Error creating account:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {

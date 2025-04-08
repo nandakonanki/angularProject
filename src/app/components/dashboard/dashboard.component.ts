@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { icon: 'credit_card', label: 'Bill Pay', route: '/bill-pay' },
     { icon: 'send', label: 'Transfer', route: '/transfers' },
     { icon: 'description', label: 'Statements', route: '/statements' },
+    { icon: 'account_balance', label: 'Account Status', route: '/account-status' },
     { icon: 'delete', label: 'Delete All', action: () => this.showDeleteConfirmation() }
   ];
 
